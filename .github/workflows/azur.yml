@@ -1,7 +1,7 @@
 name: build_image
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   build:
@@ -12,28 +12,14 @@ jobs:
       -  name: check code 
          uses: actions/checkout@v2
 
-      - name: ACR build
-        id: acr
-        uses: ams0/acr-task-github-action@v1
-        with:
-          service_principal: ${{ secrets.service_principal }}
-          service_principal_password: ${{ secrets.service_principal_password }}
-          tenant: ${{ secrets.tenant }}
-          registry: ${{ secrets.registry }}
-          repository: ${{ secrets.repository }}
-          image: poi
-          git_access_token: ${{ secrets.git_access_token }}
-          folder: src/poi
-          dockerfile: ../../dockerfiles/Dockerfile_3
-
 
 # build and Push
 - uses: azure/docker-login@v2
   with:
-    login-server: contoso.azurecr.io
+    login-server: azhub.azurecr.io
     username: ${{ secrets.REGISTRY_USERNAME }}
     password: ${{ secrets.REGISTRY_PASSWORD }}
 
 - run: |
-    docker build . -t contoso.azurecr.io/k8sdemo:${{ github.sha }}
-    docker push contoso.azurecr.io/k8sdemo:${{ github.sha }}
+    docker build . -t azhub.azurecr.io/appjsv:${{ github.sha }}
+    docker push azhub.azurecr.io/appjsv:${{ github.sha }}
